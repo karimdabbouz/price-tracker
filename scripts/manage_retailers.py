@@ -4,11 +4,11 @@ from pathlib import Path
 project_root = str(Path(__file__).parent.parent)
 sys.path.append(project_root)
 
-from db.models import Retailer
-from schemas import RetailerConfig
+from shared.db.models import Retailer
+from shared.schemas import RetailerConfig
 import argparse
-from db.database import Database
-from logger import logger
+from shared.db.database import Database
+from shared.logger import logger
 
 
 def add_retailer(session, name, base_url, scraping_method='ui', scrape_interval=3600, affiliate_tag=None, selenium_mode='uc', selenium_headed=True, selenium_proxy=None):

@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import Session
 from ..models import Prices
-from schemas import PriceSchema
+from shared.schemas import PriceSchema
 import datetime
 
 

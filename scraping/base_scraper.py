@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 from seleniumbase import Driver
-from db.models import Product
-from schemas import ProductSchema, PriceSchema
-from logger import logger
+from shared.db.models import Product
+from shared.schemas import ProductSchema, PriceSchema
+from shared.logger import logger
 
 
 class BaseScraper(ABC):

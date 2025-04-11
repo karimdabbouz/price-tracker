@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from .models import Base
 import os
 from dotenv import load_dotenv
-from logger import logger
+from shared.logger import logger
 
 
 class Database:

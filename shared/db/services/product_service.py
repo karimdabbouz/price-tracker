@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import Session
 from ..models import Product
-from schemas import ProductSchema
+from shared.schemas import ProductSchema
 
 
 class ProductService:
