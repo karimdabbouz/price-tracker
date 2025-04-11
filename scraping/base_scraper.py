@@ -9,16 +9,15 @@ from logger import logger
 class BaseScraper(ABC):
     def __init__(
         self,
-        retailer_config: Dict[str, Any],
-        selenium_settings: Dict[str, Any] = {
-            'mode': 'uc',
-            'headed': True,
-            'proxy': None
-        }
+        retailer_config: Dict[str, Any]
         ):
         self.retailer_config = retailer_config
         self.scraping_mode = self.retailer_config.get('scraping_mode', 'ui')
-        self.selenium_settings = selenium_settings
+        self.selenium_settings = self.retailer_config.get('selenium_settings', {
+            'mode': 'uc',
+            'headed': True,
+            'proxy': None
+        })
     
 
     def _initialize_driver(self) -> Driver:
