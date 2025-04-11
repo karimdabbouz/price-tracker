@@ -122,7 +122,7 @@ class BaseScraper(ABC):
                         if result:
                             results.append(result)
                     except Exception as e:
-                        logger.error(f'Error scraping product {product.id}: {str(e)}')
+                        logger.error(f'Error scraping product {product.manufacturer_id}: {str(e)}')
                         continue
                 return results
             finally:
