@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 from ..models import Retailer
-from schemas import RetailerSchema
+from shared.schemas import RetailerSchema
 
 
 class RetailerService:
@@ -31,3 +31,21 @@ class RetailerService:
                 setattr(retailer, key, value)
             self.session.commit()
         return retailer 
+    
+
+    def get_all(self) -> List[RetailerSchema]:
+        '''
+        Returns all manufacturers.
+        '''
+        retailers = self.session.query(Retailer).all()
+        return [
+            RetailerSchema.model_validate({
+                'id': r.id,
+                'name': r.name,
+                'base_url': r.base_url,
+                'scraping_config': r.scraping_config,
+                'affiliate_tag': r.affiliate_tag,
+                'scrape_interval': r.scrape_interval
+            })
+            for r in retailers
+        ]

@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any, List, Tuple
 class ProductSchema(BaseModel):
     id: Optional[int] = None
     manufacturer_id: Optional[str] = None
-    name: Optional[str] = None 
+    name: Optional[str] = None
     manufacturer: Optional[str] = None
     category: Optional[str] = None
     base_image_url: Optional[str] = None

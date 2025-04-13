@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
 from ..models import Product
 from shared.schemas import ProductSchema
@@ -12,28 +12,38 @@ class ProductService:
         self.session = session
     
 
-    def update(self, product_id: int, product_data: ProductSchema) -> Optional[Product]:
+    def get_by_id(self, id: int) -> ProductSchema:
         '''
-        Update an existing product.
+        Gets a product by its ID.
+        '''
+        product = self.session.query(Product).filter(Product.id == id).first()
+        return ProductSchema.model_validate(product.__dict__)
+
+
+    def get_by_manufacturer(self, manufacturer: str, release_year: Optional[int] = None, limit: Optional[int] = None) -> List[ProductSchema]:
+        '''
+        Returns a list of products for a given manufacturer.
         
         Args:
-            product_id: ID of the product to update
-            product_data: Pydantic schema with updated data
-            
-        Returns:
-            Updated Product if found, None otherwise
+            manufacturer: Name of the manufacturer
+            release_year: Optional year to filter products by
+            limit: Optional maximum number of products to return
         '''
-        product = self.session.query(Product).filter(Product.id == product_id).first()
-        if product:
-            update_data = product_data.model_dump(exclude={'id'})
-            for key, value in update_data.items():
-                setattr(product, key, value)
-            self.session.commit()
-        return product
+        if release_year:
+            query = self.session.query(Product).filter(Product.manufacturer == manufacturer, Product.release_year == release_year)
+        else:
+            query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
+        if limit:
+            query = query.limit(limit)
+        products = query.all()
+        return [ProductSchema.model_validate(product.__dict__) for product in products]
+    
 
-
-    def get_by_id():
+    def get_autocomplete(self) -> List[Dict[str, Any]]:
         '''
-        Just an example for later
+        Returns a list of product names and id for autocomplete.
         '''
-        pass
+        return [
+            {'id': p.id, 'name': p.name}
+            for p in self.session.query(Product.id, Product.name).all()
+        ]
