@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 from ..models import Prices
 from shared.schemas import PriceSchema
@@ -21,9 +21,6 @@ class PriceService:
         Args:
             product_id: Product ID
             retailer_id: Retailer ID
-            
-        Returns:
-            bool: True if price exists, False otherwise
         '''
         return self.session.query(Prices).filter_by(
             product_id=product_id,
@@ -37,9 +34,6 @@ class PriceService:
         
         Args:
             price_schema: PriceSchema object
-            
-        Returns:
-            Created Prices database object
         '''
         price_data = price_schema.model_dump(exclude={'id'})
         price_data['last_updated'] = datetime.datetime.now(datetime.UTC)
@@ -55,9 +49,6 @@ class PriceService:
         
         Args:
             price_schema: Validated PriceSchema object
-            
-        Returns:
-            Updated Prices database object if found, None otherwise
         '''
         existing_price = self.session.query(Prices).filter_by(
             product_id=price_schema.product_id,
@@ -84,3 +75,11 @@ class PriceService:
             return existing_price
             
         return None  # Return None if no changes were made
+    
+
+    def get_by_product_id(self, product_id: int) -> List[PriceSchema]:
+        '''
+        Returns a list of prices for a given product.
+        '''
+        prices = self.session.query(Prices).filter_by(product_id=product_id).all()
+        return [PriceSchema.model_validate(price.__dict__) for price in prices]

@@ -27,7 +27,6 @@ async def get_manufacturers():
     '''
     Returns a list of manufacturer names and their ID.
     '''
-    print('haha')
     with db.get_session() as session:
         retailer_service = RetailerService(session)
         retailer_list = retailer_service.get_all()
@@ -69,3 +68,13 @@ async def get_product(id: int):
     with db.get_session() as session:
         product_service = ProductService(session)
         return product_service.get_by_id(id)
+    
+
+@app.get('/products/{product_id}/prices', response_model=List[PriceSchema])
+async def get_product_prices(product_id: int):
+    '''
+    Returns a list of prices for a given product.
+    '''
+    with db.get_session() as session:
+        price_service = PriceService(session)
+        return price_service.get_by_product_id(product_id)
