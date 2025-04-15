@@ -45,4 +45,4 @@ class Retailer(Base):
     base_url = Column(String)
     scraping_config = Column(JSON)
     affiliate_tag = Column(String)
-    scrape_interval = Column(Integer)
+    scrape_intervals = Column(JSON)

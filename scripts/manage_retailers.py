@@ -11,7 +11,7 @@ from shared.db.database import Database
 from shared.logger import logger
 
 
-def add_retailer(session, name, base_url, scraping_method='ui', scrape_interval=3600, affiliate_tag=None, selenium_mode='uc', selenium_headed=True, selenium_proxy=None):
+def add_retailer(session, name, base_url, scraping_method='ui', scrape_intervals=None, affiliate_tag=None, selenium_mode='uc', selenium_headed=True, selenium_proxy=None):
     config = RetailerConfig(
         base_url=base_url,
         scraping_method=scraping_method,
@@ -22,12 +22,20 @@ def add_retailer(session, name, base_url, scraping_method='ui', scrape_interval=
         }
     )
     
+    # Default intervals if none provided
+    if scrape_intervals is None:
+        scrape_intervals = {
+            'current_year': 21600,  # 6 hours
+            'previous_year': 43200, # 12 hours
+            'older': 86400         # 24 hours
+        }
+    
     retailer = Retailer(
         name=name,
         base_url=base_url,
         scraping_config=config.model_dump(),
         affiliate_tag=affiliate_tag,
-        scrape_interval=scrape_interval
+        scrape_intervals=scrape_intervals
     )
     session.add(retailer)
     session.commit()
@@ -44,7 +52,7 @@ def list_retailers(session):
     retailers = session.query(Retailer).all()
     logger.info('\nCurrent retailers:')
     for r in retailers:
-        logger.info(f'ID: {r.id}, Name: {r.name}, URL: {r.base_url}, Interval: {r.scrape_interval}')
+        logger.info(f'ID: {r.id}, Name: {r.name}, URL: {r.base_url}, Interval: {r.scrape_intervals}')
 
 
 def main():
@@ -53,7 +61,7 @@ def main():
     parser.add_argument('--name', help='Retailer name')
     parser.add_argument('--base-url', help='Retailer base URL')
     parser.add_argument('--scraping-method', default='ui', choices=['ui', 'api', 'sitemap'], help='Scraping method')
-    parser.add_argument('--scrape-interval', type=int, default=3600, help='Scrape interval in seconds')
+    parser.add_argument('--scrape-intervals', help='Scrape intervals in seconds')
     parser.add_argument('--affiliate-tag', help='Affiliate tag')
     parser.add_argument('--selenium-mode', choices=['uc', 'wire'], default='uc', help='Selenium mode')
     parser.add_argument('--selenium-headed', type=bool, default=True, help='Run selenium in headed mode')
@@ -73,7 +81,7 @@ def main():
                     args.name, 
                     args.base_url, 
                     args.scraping_method,
-                    args.scrape_interval,
+                    args.scrape_intervals,
                     args.affiliate_tag,
                     args.selenium_mode,
                     args.selenium_headed,

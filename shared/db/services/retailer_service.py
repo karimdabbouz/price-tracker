@@ -35,7 +35,7 @@ class RetailerService:
 
     def get_all(self) -> List[RetailerSchema]:
         '''
-        Returns all manufacturers.
+        Returns all retailers.
         '''
         retailers = self.session.query(Retailer).all()
         return [
@@ -45,7 +45,7 @@ class RetailerService:
                 'base_url': r.base_url,
                 'scraping_config': r.scraping_config,
                 'affiliate_tag': r.affiliate_tag,
-                'scrape_interval': r.scrape_interval
+                'scrape_intervals': r.scrape_intervals
             })
             for r in retailers
         ]

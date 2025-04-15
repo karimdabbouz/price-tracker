@@ -86,6 +86,10 @@ class RetailerSchema(BaseModel):
     base_url: str
     scraping_config: RetailerConfig
     affiliate_tag: Optional[str] = None
-    scrape_interval: int
+    scrape_intervals: Dict[str, int] = {
+        'current_year': 21600,  # 6 hours
+        'previous_year': 43200, # 12 hours
+        'older': 86400         # 24 hours
+    }
 
     model_config = ConfigDict(coerce_numbers_to_str=True)
