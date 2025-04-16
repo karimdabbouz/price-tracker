@@ -1,6 +1,8 @@
+import datetime
 from typing import Optional, List, Dict, Any
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
-from ..models import Product
+from ..models import Product, Prices, Retailer
 from shared.schemas import ProductSchema
 
 
@@ -47,3 +49,39 @@ class ProductService:
             {'id': p.id, 'name': p.name}
             for p in self.session.query(Product.id, Product.name).all()
         ]
+    
+
+    def get_products_to_scrape(self, interval: tuple[str, int], retailer_id: int) -> List[ProductSchema]:
+        '''
+        Returns a list of products that need to be scraped.
+
+        Args:
+            interval: Tuple of (interval_name, interval_duration)
+            retailer_id: The ID of the retailer to check prices for.
+        '''
+        interval_name, interval_duration = interval
+        current_year = datetime.datetime.now().year
+        
+        retailer = self.session.query(Retailer).filter(Retailer.id == retailer_id).first()
+        excluded_brands = retailer.excluded_brands
+        
+        if interval_name == 'current_year':
+            year_filter = Product.release_year == current_year
+        elif interval_name == 'previous_year':
+            year_filter = Product.release_year == current_year - 1
+        else:
+            year_filter = Product.release_year < current_year - 1
+        
+        products = self.session.query(Product).outerjoin(
+            Prices,
+            (Product.id == Prices.product_id) & (Prices.retailer_id == retailer_id)
+        ).filter(
+            year_filter,
+            ~Product.manufacturer.in_(excluded_brands),
+            or_(
+                Prices.id == None,
+                Prices.last_updated < datetime.datetime.now() - datetime.timedelta(seconds=interval_duration)
+            )
+        ).all()
+        
+        return [ProductSchema.model_validate(product.__dict__) for product in products]

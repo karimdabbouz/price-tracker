@@ -2,22 +2,15 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 from seleniumbase import Driver
 from shared.db.models import Product
-from shared.schemas import ProductSchema, PriceSchema
+from shared.schemas import ProductSchema, PriceSchema, RetailerConfig
 from shared.logger import logger
 
 
 class BaseScraper(ABC):
-    def __init__(
-        self,
-        retailer_config: Dict[str, Any]
-        ):
+    def __init__(self, retailer_config: RetailerConfig):
         self.retailer_config = retailer_config
-        self.scraping_mode = self.retailer_config.get('scraping_mode', 'ui')
-        self.selenium_settings = self.retailer_config.get('selenium_settings', {
-            'mode': 'uc',
-            'headed': True,
-            'proxy': None
-        })
+        self.scraping_mode = retailer_config.scraping_method
+        self.selenium_settings = retailer_config.selenium_settings
     
 
     def _initialize_driver(self) -> Driver:

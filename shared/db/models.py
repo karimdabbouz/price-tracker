@@ -46,3 +46,4 @@ class Retailer(Base):
     scraping_config = Column(JSON)
     affiliate_tag = Column(String)
     scrape_intervals = Column(JSON)
+    excluded_brands = Column(JSON)  # List of brand names to exclude

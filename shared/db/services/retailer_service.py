@@ -30,8 +30,16 @@ class RetailerService:
             for key, value in update_data.items():
                 setattr(retailer, key, value)
             self.session.commit()
-        return retailer 
+        return retailer
     
+
+    def get_by_id(self, retailer_id: int) -> Optional[RetailerSchema]:
+        '''
+        Get a retailer by ID.
+        '''
+        retailer = self.session.query(Retailer).filter(Retailer.id == retailer_id).first()
+        return RetailerSchema.model_validate(retailer.__dict__) if retailer else None
+
 
     def get_all(self) -> List[RetailerSchema]:
         '''
@@ -45,7 +53,8 @@ class RetailerService:
                 'base_url': r.base_url,
                 'scraping_config': r.scraping_config,
                 'affiliate_tag': r.affiliate_tag,
-                'scrape_intervals': r.scrape_intervals
+                'scrape_intervals': r.scrape_intervals,
+                'excluded_brands': r.excluded_brands
             })
             for r in retailers
         ]
