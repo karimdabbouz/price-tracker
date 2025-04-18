@@ -4,6 +4,7 @@ from seleniumbase import Driver
 from shared.db.models import Product
 from shared.schemas import ProductSchema, PriceSchema, RetailerConfig
 from shared.logger import logger
+import os, datetime
 
 
 class BaseScraper(ABC):
@@ -57,6 +58,19 @@ class BaseScraper(ABC):
                     raise Exception(f'Error initializing driver: {e}')
         else:
             raise ValueError(f'Invalid value for scraping_method: {e}')
+
+
+    def _take_screenshot(self, driver: Driver):
+        '''
+        Takes a screenshot of the current page and saves it to the screenshots directory.
+        '''
+        screenshots_dir = '/app/screenshots'
+        if not os.path.exists(screenshots_dir):
+            os.makedirs(screenshots_dir)
+        
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        screenshot_path = os.path.join(screenshots_dir, f'screenshot_{timestamp}.png')
+        driver.save_screenshot(screenshot_path)
 
 
     @abstractmethod
