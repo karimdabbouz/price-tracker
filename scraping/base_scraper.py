@@ -9,6 +9,7 @@ import os, datetime
 
 class BaseScraper(ABC):
     def __init__(self, retailer_config: RetailerConfig):
+        self.take_screenshots = retailer_config.take_screenshots
         self.retailer_config = retailer_config
         self.scraping_mode = retailer_config.scraping_method
         self.selenium_settings = retailer_config.selenium_settings

@@ -73,6 +73,7 @@ class RetailerConfig(BaseModel):
     id: Optional[int] = None
     base_url: str
     scraping_method: str # valid options: ui, api, sitemap
+    take_screenshots: bool = False
     selenium_settings: Dict[str, Any] = {
         'mode': 'uc',
         'headed': True,
