@@ -14,5 +14,9 @@
   "type": "module",
   "workspaces": [
     "src/ic_frontend"
-  ]
+  ],
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "tailwindcss": "^4.1.4"
+  }
 }
