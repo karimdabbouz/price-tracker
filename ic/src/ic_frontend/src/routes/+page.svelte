@@ -7,7 +7,7 @@
 </script>
 
 
-<div class="grid grid-cols-12 grid-rows-[240px_auto_auto] min-h-screen gap-2" style="background-color: #F8FAFC;">
+<div class="grid grid-cols-12 grid-rows-[260px_auto_auto] min-h-screen gap-2" style="background-color: #F8FAFC;">
     <div class="col-span-12"></div>
     
     <div class="col-start-2 col-span-6">
@@ -31,16 +31,16 @@
         </div>
         
         <div class="col-start-2 col-span-3">
-            {#each Array(6) as _, i}
-                <div class="h-64 mb-2" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
+            {#each marken as _, i}
+                <div class="h-64 mb-2 flex items-center p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                     Marke {i + 1}
                 </div>
             {/each}
         </div>
         
         <div class="col-start-5 col-span-3">
-            {#each Array(6) as _, i}
-                <div class="h-64 mb-2" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
+            {#each neuheiten as _, i}
+                <div class="h-64 mb-2 flex items-center p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                     Neuheit {i + 1}
                 </div>
             {/each}

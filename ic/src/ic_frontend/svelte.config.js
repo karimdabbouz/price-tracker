@@ -14,6 +14,9 @@ const config = {
       precompress: false,
       strict: true,
     }),
+    // prerender: {
+    //   entries: ['*'] // prerender all routes
+    // }
   },
   preprocess: vitePreprocess()
 };
