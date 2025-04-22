@@ -18,5 +18,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
     "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "@tsconfig/svelte": "^5.0.4"
   }
 }

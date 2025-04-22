@@ -1,7 +1,49 @@
 <script lang="ts">
     import "../index.css";
+    
+    // dummy data
+    const marken: string[] = Array(6).fill(null).map((_, i) => `Marke ${i + 1}`);
+    const neuheiten: string[] = Array(6).fill(null).map((_, i) => `Neuheit ${i + 1}`);
 </script>
 
-<main>
-    <h1 class="text-3xl font-bold underline">Hello World</h1>
-</main>
+
+<div class="grid grid-cols-12 grid-rows-[240px_auto_auto] min-h-screen gap-2" style="background-color: #F8FAFC;">
+    <div class="col-span-12"></div>
+    
+    <div class="col-start-2 col-span-6">
+        <h1 class="text-8xl font-bold" style="color: #0000ff;">
+            Alternative<br>
+            Klemmbausteine im<br>
+            Preisvergleich
+        </h1>
+    </div>
+    
+    <div class="col-span-12 grid grid-cols-12 auto-rows-auto gap-2 mt-20">
+        <div class="col-start-2 col-span-3 mb-4">
+            <h2 class="text-2xl" style="color: #1E293B">
+                Marken
+            </h2>
+        </div>
+        <div class="col-start-5 col-span-3 mb-4">
+            <h2 class="text-2xl" style="color: #1E293B">
+                Neuheiten
+            </h2>
+        </div>
+        
+        <div class="col-start-2 col-span-3">
+            {#each Array(6) as _, i}
+                <div class="h-64 mb-2" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
+                    Marke {i + 1}
+                </div>
+            {/each}
+        </div>
+        
+        <div class="col-start-5 col-span-3">
+            {#each Array(6) as _, i}
+                <div class="h-64 mb-2" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
+                    Neuheit {i + 1}
+                </div>
+            {/each}
+        </div>
+    </div>
+</div>

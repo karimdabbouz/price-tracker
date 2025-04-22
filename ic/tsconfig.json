@@ -1,4 +1,5 @@
 {
+    "extends": "@tsconfig/svelte/tsconfig.json",
     "compilerOptions": {
         "strict": true,
         "target": "ES2020",
@@ -6,6 +7,8 @@
         "strictPropertyInitialization": false,
         "moduleResolution": "node",
         "allowJs": true,
-        "outDir": "HACK_BECAUSE_OF_ALLOW_JS"
-    }
+        "outDir": "HACK_BECAUSE_OF_ALLOW_JS",
+        "types": ["vite/client"]
+    },
+    "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
