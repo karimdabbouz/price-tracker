@@ -6,8 +6,9 @@ project_root = str(Path(__file__).parent.parent)
 sys.path.append(project_root)
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from shared.db.database import Database
-from shared.schemas import ProductSchema, PriceSchema, RetailerSchema
+from shared.schemas import ProductSchema, PriceSchema
 from shared.db.services.product_service import ProductService
 from shared.db.services.price_service import PriceService
 from shared.db.services.retailer_service import RetailerService
@@ -16,6 +17,14 @@ from shared.db.services.retailer_service import RetailerService
 app = FastAPI()
 db = Database()
 
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['http://localhost:3000'],
+    allow_credentials=True,
+    allow_methods=['GET'],
+    allow_headers=['Authorization', 'Content-Type']
+)
 
 @app.get('/')
 def read_root():
