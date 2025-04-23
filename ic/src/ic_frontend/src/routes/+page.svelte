@@ -1,11 +1,20 @@
 <script lang="ts">
     import "../index.css";
-    
+    import Navbar from "../components/Navbar.svelte";
+    import { autocompleteProducts } from "$lib/stores";
+
+
+    console.log($autocompleteProducts);
+
+
     // dummy data
-    const marken: string[] = Array(6).fill(null).map((_, i) => `Marke ${i + 1}`);
-    const neuheiten: string[] = Array(6).fill(null).map((_, i) => `Neuheit ${i + 1}`);
+    let marken = Array(6).fill(null).map((_, i) => `Marke ${i + 1}`);
+    let neuheiten = Array(6).fill(null).map((_, i) => `Neuheit ${i + 1}`);
 </script>
 
+
+
+<Navbar />
 
 <div class="grid grid-cols-12 grid-rows-[260px_auto_auto] min-h-screen gap-2" style="background-color: #F8FAFC;">
     <div class="col-span-12"></div>
