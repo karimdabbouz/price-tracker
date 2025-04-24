@@ -3,9 +3,7 @@
     import Navbar from "../components/Navbar.svelte";
     import { autocompleteProducts } from "$lib/stores";
 
-
-    console.log($autocompleteProducts);
-
+    $: console.log($autocompleteProducts);
 
     // dummy data
     let marken = Array(6).fill(null).map((_, i) => `Marke ${i + 1}`);
@@ -25,6 +23,9 @@
             Klemmbausteine im<br>
             Preisvergleich
         </h1>
+        <!-- {#if $autocompleteProducts.length > 0}
+            <p>{$autocompleteProducts[0].name}</p>
+        {/if} -->
     </div>
     
     <div class="col-span-12 grid grid-cols-12 auto-rows-auto gap-2 mt-20">
