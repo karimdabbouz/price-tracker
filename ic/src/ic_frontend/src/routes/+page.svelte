@@ -1,15 +1,8 @@
 <script lang="ts">
     import "../index.css";
     import Navbar from "../components/Navbar.svelte";
-
-    export let data;
-    const { manufacturers, newProducts } = data;
-
-    // dummy data
-    let marken = Array(6).fill(null).map((_, i) => `Marke ${i + 1}`);
-    let neuheiten = Array(6).fill(null).map((_, i) => `Neuheit ${i + 1}`);
+    import { manufacturers, newProducts } from "$lib/stores";
 </script>
-
 
 
 <Navbar />
@@ -38,7 +31,7 @@
         </div>
         
         <div class="col-start-2 col-span-3">
-            {#each manufacturers as manufacturer}
+            {#each $manufacturers as manufacturer}
                 <div class="h-64 mb-2 flex items-center p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                     {manufacturer}
                 </div>
@@ -46,7 +39,7 @@
         </div>
         
         <div class="col-start-5 col-span-3">
-            {#each newProducts as newProduct}
+            {#each $newProducts as newProduct}
                 <div class="h-64 mb-2 flex items-center p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                     {newProduct}
                 </div>
