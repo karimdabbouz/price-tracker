@@ -15,5 +15,6 @@ export type ApiResponse<T> = {
  */
 export interface ProductAutocomplete {
     id: number;
+    manufacturer: string;
     name: string;
 }

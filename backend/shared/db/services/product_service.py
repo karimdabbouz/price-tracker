@@ -43,11 +43,11 @@ class ProductService:
 
     def get_autocomplete(self) -> List[Dict[str, Any]]:
         '''
-        Returns a list of product names and id for autocomplete.
+        Returns a list of product manufacturer, name and id for autocomplete.
         '''
         return [
-            {'id': p.id, 'name': p.name}
-            for p in self.session.query(Product.id, Product.name).all()
+            {'id': p.id, 'manufacturer': p.manufacturer, 'name': p.name}
+            for p in self.session.query(Product.id, Product.manufacturer, Product.name).all()
         ]
     
 

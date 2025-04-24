@@ -4,3 +4,12 @@
 * {
     font-family: 'Manrope', sans-serif;
 }
+
+.autocomplete {
+    background-color: #ffffff;
+}
+
+.autocomplete-input {
+    background-color: #ffffff;
+    border: 3px solid #E2E8F0;
+}
