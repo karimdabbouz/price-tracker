@@ -5,8 +5,8 @@ from typing import List, Dict, Any, Optional
 project_root = str(Path(__file__).parent.parent)
 sys.path.append(project_root)
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI # type: ignore
+from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from shared.db.database import Database
 from shared.schemas import ProductSchema, PriceSchema
 from shared.db.services.product_service import ProductService
