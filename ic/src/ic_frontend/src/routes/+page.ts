@@ -1,6 +1,13 @@
 // import type { ApiResponse, ProductAutocomplete } from "$lib/types";
 
 
+export async function load() {
+    return {
+        manufacturers: ["CaDA", "Cobi", "Bluebrixx", "Lumibricks", "Pantasy"],
+        newProducts: ["eins", "zwei", "drei", "vier", "fünf"]
+    }
+}
+
 // export async function load() {
 //     try {
 //         const response = await fetch("http://localhost:8000/products/autocomplete");

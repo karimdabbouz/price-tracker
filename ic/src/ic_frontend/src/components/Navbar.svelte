@@ -25,7 +25,7 @@
                 <AutoComplete items="{$autocompleteProducts.map(product => `${product.manufacturer} ${product.name}`)}" bind:selectedItem="{choice}" placeholder="Set suchen..." maxItemsToShowInList=5 hideArrow={true}/>
             </li>
             <li class="mx-1 sm:mx-2 md:mx-4 lg:mx-10"><p>{choice}</p></li>
-			<li class="mx-1 sm:mx-2 md:mx-4 lg:mx-10"><a href="/" class="p-1 sm:p-2">Marken</a></li>
+			<li class="mx-1 sm:mx-2 md:mx-4 lg:mx-10"><a href="/marken" class="p-1 sm:p-2">Marken</a></li>
 			<li class="mx-1 sm:mx-2 md:mx-4 lg:mx-10"><a href="/" class="p-1 sm:p-2">FAQ</a></li>
 		</ul>
 	</div>
