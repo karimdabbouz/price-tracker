@@ -14,6 +14,9 @@ const config = {
       precompress: false,
       strict: true,
     }),
+    prerender: {
+      crawl: true,
+    }
     // prerender: {
     //   entries: ['*'] // prerender all routes
     // }

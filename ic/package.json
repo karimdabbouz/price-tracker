@@ -20,6 +20,7 @@
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
+    "@sveltejs/kit": "^2.20.7",
     "@tsconfig/svelte": "^5.0.4",
     "simple-svelte-autocomplete": "^2.5.2"
   }
