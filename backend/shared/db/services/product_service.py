@@ -49,13 +49,10 @@ class ProductService:
         
         if sort_by:
             sort_column = getattr(Product, sort_by, None)
-            print(f'Sort column: {sort_column}')
             if sort_column is not None:
                 if order.lower() == 'desc':
-                    print('Using descending order')
                     query = query.order_by(nullslast(sort_column.desc()))
                 else:
-                    print('Using ascending order')
                     query = query.order_by(nullslast(sort_column.asc()))
         if limit:
             query = query.limit(limit)

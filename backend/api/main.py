@@ -26,10 +26,6 @@ app.add_middleware(
     allow_headers=['Authorization', 'Content-Type']
 )
 
-@app.get('/')
-def read_root():
-    return {'lorem': 'ipsum'}
-
 
 @app.get('/manufacturers', response_model=List[Dict[str, Any]])
 async def get_manufacturers():
@@ -109,7 +105,7 @@ async def get_product_prices(product_id: int):
         return price_service.get_by_product_id(product_id)
 
 
-# optimize for more products
+# optimize to be able to quickly retrieve more products
 @app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
 async def get_product_listings(
     manufacturer: str, 
@@ -120,12 +116,13 @@ async def get_product_listings(
 ):
     '''
     Returns a list of products with their prices for a given manufacturer.
+    Only returnes products if a price exists and at least one price is in stock.
     
     Parameters:
     - manufacturer: Name of the manufacturer
     - release_year: Optional year to filter products by
     - limit: Optional maximum number of products to return
-    - sort_by: Optional field to sort by (e.g., 'release_year', 'name')
+    - sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'num_prices')
     - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
     '''
     with db.get_session() as session:
@@ -141,7 +138,8 @@ async def get_product_listings(
         product_listings = []
         for product in products:
             prices = price_service.get_by_product_id(product.id)
-            if prices:
+            prices_in_stock = [price for price in prices if price.in_stock]
+            if prices_in_stock:
                 product_dict = {
                     'id': product.id,
                     'manufacturer_id': product.manufacturer_id,
@@ -151,7 +149,9 @@ async def get_product_listings(
                     'base_image_url': product.base_image_url,
                     'description': product.description,
                     'release_year': product.release_year,
-                    'prices': prices
+                    'prices': prices_in_stock
                 }
                 product_listings.append(ProductListingSchema(**product_dict))
+        if sort_by == 'num_prices':
+            product_listings.sort(key=lambda x: len(x.prices), reverse=order == 'desc')
         return product_listings
