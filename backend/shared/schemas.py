@@ -95,3 +95,19 @@ class RetailerSchema(BaseModel):
     excluded_brands: List[str] = []  # Default to empty list
 
     model_config = ConfigDict(coerce_numbers_to_str=True)
+
+
+class ProductListingSchema(BaseModel):
+    '''
+    Schema for a product including its available prices.
+    Does not include all fields of ProductSchema.
+    '''
+    id: int
+    manufacturer_id: str
+    name: str
+    manufacturer: str
+    category: Optional[str] = None
+    base_image_url: Optional[str] = None
+    description: Optional[str] = None
+    release_year: Optional[int] = None
+    prices: List[PriceSchema] = []

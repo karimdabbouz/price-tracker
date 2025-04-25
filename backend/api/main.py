@@ -8,7 +8,7 @@ sys.path.append(project_root)
 from fastapi import FastAPI # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from shared.db.database import Database
-from shared.schemas import ProductSchema, PriceSchema
+from shared.schemas import ProductSchema, PriceSchema, ProductListingSchema
 from shared.db.services.product_service import ProductService
 from shared.db.services.price_service import PriceService
 from shared.db.services.retailer_service import RetailerService
@@ -49,6 +49,7 @@ async def get_manufacturers():
         ]
 
 
+# kann sein, dass wir das nicht mehr brauchen
 @app.get('/manufacturers/{manufacturer}/products', response_model=List[ProductSchema])
 async def get_products(
     manufacturer: str, 
@@ -106,3 +107,49 @@ async def get_product_prices(product_id: int):
     with db.get_session() as session:
         price_service = PriceService(session)
         return price_service.get_by_product_id(product_id)
+
+
+@app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
+async def get_product_listings(
+    manufacturer: str, 
+    release_year: Optional[int] = None, 
+    limit: Optional[int] = None,
+    sort_by: Optional[str] = None,
+    order: Optional[str] = 'desc'
+):
+    '''
+    Returns a list of products with their prices for a given manufacturer.
+    
+    Parameters:
+    - manufacturer: Name of the manufacturer
+    - release_year: Optional year to filter products by
+    - limit: Optional maximum number of products to return
+    - sort_by: Optional field to sort by (e.g., 'release_year', 'name')
+    - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
+    '''
+    with db.get_session() as session:
+        product_service = ProductService(session)
+        price_service = PriceService(session)
+        products = product_service.get_by_manufacturer(
+            manufacturer=manufacturer, 
+            release_year=release_year, 
+            limit=limit,
+            sort_by=sort_by,
+            order=order
+        )
+        product_listings = []
+        for product in products:
+            prices = price_service.get_by_product_id(product.id)
+            product_dict = {
+                'id': product.id,
+                'manufacturer_id': product.manufacturer_id,
+                'name': product.name,
+                'manufacturer': product.manufacturer,
+                'category': product.category,
+                'base_image_url': product.base_image_url,
+                'description': product.description,
+                'release_year': product.release_year,
+                'prices': prices
+            }
+            product_listings.append(ProductListingSchema(**product_dict))
+        return product_listings
