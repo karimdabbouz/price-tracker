@@ -109,6 +109,7 @@ async def get_product_prices(product_id: int):
         return price_service.get_by_product_id(product_id)
 
 
+# optimize for more products
 @app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
 async def get_product_listings(
     manufacturer: str, 
@@ -140,16 +141,17 @@ async def get_product_listings(
         product_listings = []
         for product in products:
             prices = price_service.get_by_product_id(product.id)
-            product_dict = {
-                'id': product.id,
-                'manufacturer_id': product.manufacturer_id,
-                'name': product.name,
-                'manufacturer': product.manufacturer,
-                'category': product.category,
-                'base_image_url': product.base_image_url,
-                'description': product.description,
-                'release_year': product.release_year,
-                'prices': prices
-            }
-            product_listings.append(ProductListingSchema(**product_dict))
+            if prices:
+                product_dict = {
+                    'id': product.id,
+                    'manufacturer_id': product.manufacturer_id,
+                    'name': product.name,
+                    'manufacturer': product.manufacturer,
+                    'category': product.category,
+                    'base_image_url': product.base_image_url,
+                    'description': product.description,
+                    'release_year': product.release_year,
+                    'prices': prices
+                }
+                product_listings.append(ProductListingSchema(**product_dict))
         return product_listings
