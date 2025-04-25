@@ -46,7 +46,6 @@ class ProductService:
         query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
         if release_year:
             query = query.filter(Product.release_year == release_year)
-        
         if sort_by:
             sort_column = getattr(Product, sort_by, None)
             if sort_column is not None:

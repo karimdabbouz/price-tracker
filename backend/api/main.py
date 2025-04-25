@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 project_root = str(Path(__file__).parent.parent)
 sys.path.append(project_root)
 
-from fastapi import FastAPI # type: ignore
+from fastapi import FastAPI, Query # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 from shared.db.database import Database
 from shared.schemas import ProductSchema, PriceSchema, ProductListingSchema
@@ -111,7 +111,7 @@ async def get_product_listings(
     manufacturer: str, 
     release_year: Optional[int] = None, 
     limit: Optional[int] = None,
-    sort_by: Optional[str] = None,
+    sort_by: Optional[List[str]] = Query(None),
     order: Optional[str] = 'desc'
 ):
     '''
@@ -132,9 +132,10 @@ async def get_product_listings(
             manufacturer=manufacturer, 
             release_year=release_year, 
             limit=limit,
-            sort_by=sort_by,
+            sort_by=sort_by[0] if sort_by else None,
             order=order
         )
+        print(f'sort_by: {sort_by}')
         product_listings = []
         for product in products:
             prices = price_service.get_by_product_id(product.id)
@@ -152,6 +153,6 @@ async def get_product_listings(
                     'prices': prices_in_stock
                 }
                 product_listings.append(ProductListingSchema(**product_dict))
-        if sort_by == 'num_prices':
+        if sort_by and 'num_prices' in sort_by:
             product_listings.sort(key=lambda x: len(x.prices), reverse=order == 'desc')
         return product_listings
