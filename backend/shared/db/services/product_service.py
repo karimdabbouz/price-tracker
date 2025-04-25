@@ -4,6 +4,7 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from ..models import Product, Prices, Retailer
 from shared.schemas import ProductSchema
+from sqlalchemy.sql import nullslast
 
 
 class ProductService:
@@ -22,19 +23,40 @@ class ProductService:
         return ProductSchema.model_validate(product.__dict__)
 
 
-    def get_by_manufacturer(self, manufacturer: str, release_year: Optional[int] = None, limit: Optional[int] = None) -> List[ProductSchema]:
+    def get_by_manufacturer(
+        self, 
+        manufacturer: str, 
+        release_year: Optional[int] = None, 
+        limit: Optional[int] = None,
+        sort_by: Optional[str] = None,
+        order: Optional[str] = 'desc'
+    ) -> List[ProductSchema]:
         '''
-        Returns a list of products for a given manufacturer.
+        Returns a list of products for a given manufacturer with flexible filtering and sorting.
         
         Args:
             manufacturer: Name of the manufacturer
             release_year: Optional year to filter products by
             limit: Optional maximum number of products to return
+            sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'price')
+            order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
         '''
+        print(f'Params: {manufacturer}, {release_year}, {limit}, {sort_by}, {order}')
+        
+        query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
         if release_year:
-            query = self.session.query(Product).filter(Product.manufacturer == manufacturer, Product.release_year == release_year)
-        else:
-            query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
+            query = query.filter(Product.release_year == release_year)
+        
+        if sort_by:
+            sort_column = getattr(Product, sort_by, None)
+            print(f'Sort column: {sort_column}')
+            if sort_column is not None:
+                if order.lower() == 'desc':
+                    print('Using descending order')
+                    query = query.order_by(nullslast(sort_column.desc()))
+                else:
+                    print('Using ascending order')
+                    query = query.order_by(nullslast(sort_column.asc()))
         if limit:
             query = query.limit(limit)
         products = query.all()

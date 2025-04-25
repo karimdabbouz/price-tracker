@@ -50,13 +50,32 @@ async def get_manufacturers():
 
 
 @app.get('/manufacturers/{manufacturer}/products', response_model=List[ProductSchema])
-async def get_products(manufacturer: str, release_year: Optional[int] = None, limit: Optional[int] = None):
+async def get_products(
+    manufacturer: str, 
+    release_year: Optional[int] = None, 
+    limit: Optional[int] = None,
+    sort_by: Optional[str] = None,
+    order: Optional[str] = 'desc'
+):
     '''
-    Returns a list of products for a given manufacturer with filtering options for release year and limit.
+    Returns a list of products for a given manufacturer with flexible filtering and sorting options.
+    
+    Parameters:
+    - manufacturer: Name of the manufacturer
+    - release_year: Optional year to filter products by
+    - limit: Optional maximum number of products to return
+    - sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'price')
+    - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
     '''
     with db.get_session() as session:
         product_service = ProductService(session)
-        return product_service.get_by_manufacturer(manufacturer=manufacturer, release_year=release_year, limit=limit)
+        return product_service.get_by_manufacturer(
+            manufacturer=manufacturer, 
+            release_year=release_year, 
+            limit=limit,
+            sort_by=sort_by,
+            order=order
+        )
     
 
 @app.get('/products/autocomplete', response_model=List[Dict[str, Any]])
