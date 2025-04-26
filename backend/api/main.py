@@ -108,11 +108,12 @@ async def get_product_prices(product_id: int):
 # optimize to be able to quickly retrieve more products
 @app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
 async def get_product_listings(
-    manufacturer: str, 
-    release_year: Optional[int] = None, 
+    manufacturer: str,
+    release_year: Optional[int] = None,
     limit: Optional[int] = None,
-    sort_by: Optional[List[str]] = Query(None),
-    order: Optional[str] = 'desc'
+    sort_by: Optional[str] = None,
+    order: Optional[str] = 'desc',
+    sort_by_num_prices: Optional[bool] = False
 ):
     '''
     Returns a list of products with their prices for a given manufacturer.
@@ -124,6 +125,7 @@ async def get_product_listings(
     - limit: Optional maximum number of products to return
     - sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'num_prices')
     - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
+    - sort_by_num_prices: Optional flag to sort by the number of prices in desc order
     '''
     with db.get_session() as session:
         product_service = ProductService(session)
@@ -132,10 +134,9 @@ async def get_product_listings(
             manufacturer=manufacturer, 
             release_year=release_year, 
             limit=limit,
-            sort_by=sort_by[0] if sort_by else None,
+            sort_by=sort_by,
             order=order
         )
-        print(f'sort_by: {sort_by}')
         product_listings = []
         for product in products:
             prices = price_service.get_by_product_id(product.id)
@@ -153,6 +154,6 @@ async def get_product_listings(
                     'prices': prices_in_stock
                 }
                 product_listings.append(ProductListingSchema(**product_dict))
-        if sort_by and 'num_prices' in sort_by:
+        if sort_by_num_prices:
             product_listings.sort(key=lambda x: len(x.prices), reverse=order == 'desc')
         return product_listings

@@ -5,6 +5,10 @@
     font-family: 'Manrope', sans-serif;
 }
 
+body {
+    background-color: #F8FAFC;
+}
+
 .autocomplete {
     background-color: #ffffff;
 }
