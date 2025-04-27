@@ -157,3 +157,31 @@ async def get_product_listings(
         if sort_by_num_prices:
             product_listings.sort(key=lambda x: len(x.prices), reverse=order == 'desc')
         return product_listings
+    
+
+@app.get('/manufacturers/{manufacturer}/product_listings_v2', response_model=List[ProductListingSchema])
+async def get_product_listings_v2(
+    manufacturer: str,
+    release_year: Optional[int] = None,
+    limit: int = 20,
+    offset: int = 0,
+    sort_by_1: Optional[str] = 'release_year',
+    order_1: Optional[str] = 'desc',
+    sort_by_2: Optional[str] = None,
+    order_2: Optional[str] = 'desc'
+):
+    '''
+    Incrementally returns a list of ProductListingSchemas for a given manufacturer.
+    Allows sorting by release_year and number of prices available.
+    '''
+    with db.get_session() as session:
+        product_service = ProductService(session)
+        # For now, only use the first sort field
+        return product_service.get_by_manufacturer_v2(
+            manufacturer=manufacturer,
+            release_year=release_year,
+            limit=limit,
+            offset=offset,
+            sort_by=sort_by_1,
+            order=order_1
+        )
