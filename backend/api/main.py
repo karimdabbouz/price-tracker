@@ -103,66 +103,12 @@ async def get_product_prices(product_id: int):
     with db.get_session() as session:
         price_service = PriceService(session)
         return price_service.get_by_product_id(product_id)
+    
 
-
-# optimize to be able to quickly retrieve more products
 @app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
 async def get_product_listings(
     manufacturer: str,
-    release_year: Optional[int] = None,
-    limit: Optional[int] = None,
-    sort_by: Optional[str] = None,
-    order: Optional[str] = 'desc',
-    sort_by_num_prices: Optional[bool] = False
-):
-    '''
-    Returns a list of products with their prices for a given manufacturer.
-    Only returnes products if a price exists and at least one price is in stock.
-    
-    Parameters:
-    - manufacturer: Name of the manufacturer
-    - release_year: Optional year to filter products by
-    - limit: Optional maximum number of products to return
-    - sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'num_prices')
-    - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
-    - sort_by_num_prices: Optional flag to sort by the number of prices in desc order
-    '''
-    with db.get_session() as session:
-        product_service = ProductService(session)
-        price_service = PriceService(session)
-        products = product_service.get_by_manufacturer(
-            manufacturer=manufacturer, 
-            release_year=release_year, 
-            limit=limit,
-            sort_by=sort_by,
-            order=order
-        )
-        product_listings = []
-        for product in products:
-            prices = price_service.get_by_product_id(product.id)
-            prices_in_stock = [price for price in prices if price.in_stock]
-            if prices_in_stock:
-                product_dict = {
-                    'id': product.id,
-                    'manufacturer_id': product.manufacturer_id,
-                    'name': product.name,
-                    'manufacturer': product.manufacturer,
-                    'category': product.category,
-                    'base_image_url': product.base_image_url,
-                    'description': product.description,
-                    'release_year': product.release_year,
-                    'prices': prices_in_stock
-                }
-                product_listings.append(ProductListingSchema(**product_dict))
-        if sort_by_num_prices:
-            product_listings.sort(key=lambda x: len(x.prices), reverse=order == 'desc')
-        return product_listings
-    
-
-@app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
-async def get_available_products_by_manufacturer(
-    manufacturer: str,
-    release_year: Optional[int] = None,
+    release_year: List[int] = Query(default=[]),
     limit: int = 20,
     offset: int = 0
 ):
@@ -172,7 +118,7 @@ async def get_available_products_by_manufacturer(
     '''
     with db.get_session() as session:
         product_service = ProductService(session)
-        return product_service.get_by_manufacturer_v2(
+        return product_service.get_available_products_by_manufacturer(
             manufacturer=manufacturer,
             release_year=release_year,
             limit=limit,
