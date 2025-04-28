@@ -21,55 +21,24 @@ class ProductService:
         '''
         product = self.session.query(Product).filter(Product.id == id).first()
         return ProductSchema.model_validate(product.__dict__)
-
-
-    def get_by_manufacturer(
-        self, 
-        manufacturer: str, 
-        release_year: Optional[int] = None, 
-        limit: Optional[int] = None,
-        sort_by: Optional[str] = None,
-        order: Optional[str] = 'desc'
-    ) -> List[ProductSchema]:
-        '''
-        Returns a list of products for a given manufacturer with flexible filtering and sorting.
-        
-        Args:
-            manufacturer: Name of the manufacturer
-            release_year: Optional year to filter products by
-            limit: Optional maximum number of products to return
-            sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'price')
-            order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
-        '''
-        print(f'Params: {manufacturer}, {release_year}, {limit}, {sort_by}, {order}')
-        
-        query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
-        if release_year:
-            query = query.filter(Product.release_year == release_year)
-        if sort_by:
-            sort_column = getattr(Product, sort_by, None)
-            if sort_column is not None:
-                if order.lower() == 'desc':
-                    query = query.order_by(nullslast(sort_column.desc()))
-                else:
-                    query = query.order_by(nullslast(sort_column.asc()))
-        if limit:
-            query = query.limit(limit)
-        products = query.all()
-        return [ProductSchema.model_validate(product.__dict__) for product in products]
     
 
-    def get_by_manufacturer_v2(
+    def get_available_products_by_manufacturer(
         self, 
         manufacturer: str, 
         release_year: List[int] = [],
         limit: Optional[int] = None,
-        offset: Optional[int] = 0,
-        sort_by: Optional[str] = None,
-        order: Optional[str] = 'desc'
+        offset: Optional[int] = 0
     ) -> List[ProductListingSchema]:
         '''
-        foo bar
+        Gets products for which at least one price exist by manufacturer
+        using limit and offset for one or more specified release years.
+        
+        Args:
+            manufacturer: The manufacturer
+            release_year: One or more release years to filter by
+            limit: Optional max number of results to return
+            offset: Optional offset
         '''
         query = self.session.query(Product, func.count(Prices.id).label('num_prices'))
         query = query.filter(Product.manufacturer == manufacturer)
@@ -77,67 +46,40 @@ class ProductService:
         query = query.group_by(Product.id)
         if release_year:
             query = query.filter(Product.release_year.in_(release_year))
-        query = query.order_by(desc('num_prices') if order == 'desc' else asc('num_prices'))
+        query = query.order_by(desc('num_prices'))
         if limit:
             query = query.limit(limit)
         if offset:
             query = query.offset(offset)
         products = query.all()
 
+        product_ids = [product.id for product, _ in products]
+        if not product_ids:
+            return []
+        prices = self.session.query(Prices).filter(Prices.product_id.in_(product_ids), Prices.in_stock == True).all()
 
+        prices_by_product = {}
+        for price in prices:
+            prices_by_product.setdefault(price.product_id, []).append(PriceSchema.model_validate(price.__dict__))
 
+        product_listings = []
+        for product, num_prices in products:
+            in_stock_prices = prices_by_product.get(product.id, [])
+            if in_stock_prices:
+                product_dict = {
+                    'id': product.id,
+                    'manufacturer_id': product.manufacturer_id,
+                    'name': product.name,
+                    'manufacturer': product.manufacturer,
+                    'category': product.category,
+                    'base_image_url': product.base_image_url,
+                    'description': product.description,
+                    'release_year': product.release_year,
+                    'prices': in_stock_prices
+                }
+                product_listings.append(ProductListingSchema.model_validate(product_dict))
+        return product_listings
 
-    # def get_by_manufacturer_v2(
-    #     self, 
-    #     manufacturer: str, 
-    #     release_year: Optional[int] = None, 
-    #     limit: Optional[int] = None,
-    #     offset: Optional[int] = 0,
-    #     sort_by: Optional[str] = None,
-    #     order: Optional[str] = 'desc'
-    # ) -> List[ProductListingSchema]:
-    #     '''
-    #     Returns a list of products for a given manufacturer with flexible filtering and sorting.
-    #     '''
-    #     query = self.session.query(Product).filter(Product.manufacturer == manufacturer)
-    #     if release_year:
-    #         query = query.filter(Product.release_year == release_year)
-    #     if sort_by:
-    #         sort_column = getattr(Product, sort_by, None)
-    #         if sort_by == 'num_prices':
-    #             price_count = func.count(Prices.id)
-    #             query = query.outerjoin(Prices, Product.id == Prices.product_id)
-    #             query = query.group_by(Product.id)
-    #             sort_column = price_count
-    #         if sort_column is not None:
-    #             query = query.order_by(
-    #                 desc(sort_column) if order == 'desc' else asc(sort_column)
-    #             )
-    #     if limit:
-    #         query = query.limit(limit)
-    #     if offset:
-    #         query = query.offset(offset)
-    #     products = query.all()
-    #     # get prices now and assemble result
-    #     product_listings = []
-    #     for product in products:
-    #         prices = self.session.query(Prices).filter_by(product_id=product.id).all()
-    #         prices_in_stock = [p for p in prices if p.in_stock] # cant we do this before? what benefits do we get?
-    #         if prices_in_stock:
-    #             product_dict = {
-    #                 'id': product.id,
-    #                 'manufacturer_id': product.manufacturer_id,
-    #                 'name': product.name,
-    #                 'manufacturer': product.manufacturer,
-    #                 'category': product.category,
-    #                 'base_image_url': product.base_image_url,
-    #                 'description': product.description,
-    #                 'release_year': product.release_year,
-    #                 'prices': [PriceSchema.model_validate(price.__dict__) for price in prices_in_stock]
-    #             }
-    #             product_listings.append(ProductListingSchema(**product_dict))
-    #     return product_listings
-            
 
     def get_autocomplete(self) -> List[Dict[str, Any]]:
         '''
