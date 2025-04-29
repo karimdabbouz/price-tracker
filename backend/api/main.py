@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 project_root = str(Path(__file__).parent.parent)
 sys.path.append(project_root)
@@ -105,7 +105,7 @@ async def get_product_prices(product_id: int):
         return price_service.get_by_product_id(product_id)
     
 
-@app.get('/manufacturers/{manufacturer}/product_listings', response_model=List[ProductListingSchema])
+@app.get('/manufacturers/{manufacturer}/product_listings', response_model=Tuple[List[ProductListingSchema], int])
 async def get_product_listings(
     manufacturer: str,
     release_year: List[int] = Query(default=[]),

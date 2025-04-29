@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 from sqlalchemy import or_, func, desc # type: ignore
 from sqlalchemy.orm import Session # type: ignore
 from ..models import Product, Prices, Retailer
@@ -28,7 +28,7 @@ class ProductService:
         release_year: List[int] = [],
         limit: Optional[int] = None,
         offset: Optional[int] = 0
-    ) -> List[ProductListingSchema]:
+    ) -> Tuple[List[ProductListingSchema], int]:
         '''
         Gets products for which at least one price exist by manufacturer
         using limit and offset for one or more specified release years.
@@ -42,9 +42,11 @@ class ProductService:
         query = self.session.query(Product, func.count(Prices.id).label('num_prices'))
         query = query.filter(Product.manufacturer == manufacturer)
         query = query.join(Prices, (Product.id == Prices.product_id) & (Prices.in_stock == True))
-        query = query.group_by(Product.id)
         if release_year:
             query = query.filter(Product.release_year.in_(release_year))
+        query = query.group_by(Product.id)
+        total_count = query.count()
+
         query = query.order_by(desc('num_prices'))
         if limit:
             query = query.limit(limit)
@@ -54,7 +56,7 @@ class ProductService:
 
         product_ids = [product.id for product, _ in products]
         if not product_ids:
-            return []
+            return [], total_count
         prices = self.session.query(Prices).filter(Prices.product_id.in_(product_ids), Prices.in_stock == True).all()
 
         prices_by_product = {}
@@ -77,7 +79,7 @@ class ProductService:
                     'prices': in_stock_prices
                 }
                 product_listings.append(ProductListingSchema.model_validate(product_dict))
-        return product_listings
+        return product_listings, total_count
 
 
     def get_autocomplete(self) -> List[Dict[str, Any]]:
