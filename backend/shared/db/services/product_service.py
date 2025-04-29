@@ -1,10 +1,9 @@
 import datetime
 from typing import Optional, List, Dict, Any
-from sqlalchemy import or_, func, desc, asc
-from sqlalchemy.orm import Session
+from sqlalchemy import or_, func, desc # type: ignore
+from sqlalchemy.orm import Session # type: ignore
 from ..models import Product, Prices, Retailer
 from shared.schemas import ProductSchema, ProductListingSchema, PriceSchema
-from sqlalchemy.sql import nullslast
 
 
 class ProductService:

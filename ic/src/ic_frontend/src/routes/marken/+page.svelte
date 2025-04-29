@@ -20,16 +20,14 @@
     </div>
 
     <div class="flex items-center justify-between my-4">
-        <div>
-            eins
+        <div class="flex bg-blue-500">
+            <div>
+                checkbox: nach anzahl preisen sortiert
+            </div>
         </div>
-        <div>
-            zwei
-        </div>
-        <div>
+        <div class="bg-red-500">
             drei
         </div>
-        <!-- <input type="text" placeholder="Filter..." class="border rounded p-2 w-full" /> -->
     </div>
 
     <div class="flex-1 my-4">

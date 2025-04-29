@@ -11,16 +11,17 @@
     let products: any[] = []; // add proper type later
     let filters = {
         limit: "20",
-        sort_by: "release_year",
         order: "desc",
-        sort_by_num_prices: true
+        release_year: [2025, 2024]
     }
 
     // load function
     const loadProducts = async () => {
         const filterParams = new URLSearchParams();
         Object.entries(filters).forEach(([key, value]) => {
-            if (value !== undefined && value !== false) {
+            if (key === 'release_year' && Array.isArray(value) && value.length > 0) {
+                value.forEach((v) => filterParams.append(key, String(v)));
+            } else if (key !== 'release_year') {
                 filterParams.append(key, String(value));
             }
         });
@@ -32,7 +33,6 @@
         return products;
     }
 
-
     // set manufacturer name from url param
     onMount(() => {
         manufacturer = $manufacturers.find(m => m.toLowerCase() === $page.params.manufacturer.toLowerCase());
@@ -41,11 +41,11 @@
     // load products from api
     onMount(async () => {
         products = await loadProducts();
+        console.log(products);
     });
 </script>
 
 <Navbar />
-
 
 
 <div class="flex flex-col min-h-screen mx-20">
@@ -67,14 +67,19 @@
     </div>
 
     <div class="flex items-center justify-between my-4">
-        <div>
-            eins
+        <div class="flex bg-blue-500">
+            <div>
+                Sortieren nach: Veröffentlichungsjahr, Preis
+            </div>
+            <div>
+                Sort direction arrow
+            </div>
+            <div>
+                Checkbox: Angebote mit mehreren Preisen zuerst anzeigen
+            </div>
         </div>
-        <div>
-            zwei
-        </div>
-        <div>
-            drei
+        <div class="bg-red-500">
+            ende
         </div>
     </div>
 
@@ -89,7 +94,12 @@
                     </div>
                     <div class="flex gap-2 mt-auto">
                         <p>{item.prices.length} Preis(e)</p>
-                        <p>foo</p>
+                        <p>
+                            {item.prices.length > 0
+                                ? Math.min(...item.prices.map(p => p.price))
+                                    .toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€'
+                                : '–'}
+                        </p>
                     </div>
                     </div>
                 {/each}
