@@ -11,20 +11,19 @@
     let manufacturer: string | undefined;
     let products: any[] = []; // add proper type later
     let showReleaseYearDropdown = false;
+    const currentYear = new Date().getFullYear();
     let state = {
         limit: 1,
         offset: 0,
-        release_year: [2025, 2024],
+        release_year: [currentYear, currentYear - 1],
         loading: false,
         total_count: 0
     }
+    $: console.log(state);
 
     
     // Helper to get all years from 2020 to max in state.release_year
-    $: availableYears = (() => {
-        const maxYear = Math.max(...state.release_year, 2020);
-        return Array.from({ length: maxYear - 2020 + 1 }, (_, i) => 2020 + i);
-    })();
+    $: availableYears = Array.from({ length: currentYear - 2020 + 1 }, (_, i) => 2020 + i);
 
 
     // Toggle year selection: add if not present, remove if present
@@ -34,7 +33,15 @@
         } else {
             state.release_year = [...state.release_year, year];
             showReleaseYearDropdown = false;
-        }
+        };
+        state = {
+            limit: 1,
+            offset: 0,
+            release_year: state.release_year,
+            loading: false,
+            total_count: 0
+        };
+        loadProducts();
     }
 
     // load function
