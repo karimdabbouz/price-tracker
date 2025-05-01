@@ -19,7 +19,6 @@
         loading: false,
         total_count: 0
     }
-    $: console.log(state);
 
     
     // Helper to get all years from 2020 to max in state.release_year
