@@ -74,6 +74,23 @@ class BaseScraper(ABC):
         driver.save_screenshot(screenshot_path)
 
 
+    def _log_event(self, level, message, **kwargs):
+        '''
+        Logs an event with the given level and message.
+
+        Args:
+            level: The log level (e.g., 'info', 'warning', 'error')
+            message: The log message
+            **kwargs: Additional keyword arguments for formatting the message
+        '''
+        log_data = {
+            'retailer': getattr(self.retailer_config, 'name', None),
+            'scraper': self.__class__.__name__,
+            **kwargs
+        }
+        getattr(logger, level)(f'{message} | {log_data}')
+
+
     @abstractmethod
     def scrape_product_ui(self, driver: Driver, product: ProductSchema) -> List[Dict[str, Any]]:
         '''
