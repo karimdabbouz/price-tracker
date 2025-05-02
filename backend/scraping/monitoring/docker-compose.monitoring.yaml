@@ -18,5 +18,13 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     restart: unless-stopped
 
-
-  # grafana
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    depends_on:
+      - loki
+    restart: unless-stopped
