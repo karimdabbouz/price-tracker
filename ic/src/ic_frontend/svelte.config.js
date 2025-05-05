@@ -1,5 +1,21 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import fs from 'fs';
+
+
+const slugify = (str) => {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+};
+
+const products = JSON.parse(fs.readFileSync('src/lib/data/products.json', 'utf-8'));
+
+const productEntries = products.map(
+  (p) =>
+    `/products/${p.id}-${slugify(p.manufacturer)}-${p.manufacturer_id}-${slugify(p.name)}`
+);
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,11 +31,9 @@ const config = {
       strict: true,
     }),
     prerender: {
+      entries: ['*', ...productEntries],
       crawl: true,
     }
-    // prerender: {
-    //   entries: ['*'] // prerender all routes
-    // }
   },
   preprocess: vitePreprocess()
 };

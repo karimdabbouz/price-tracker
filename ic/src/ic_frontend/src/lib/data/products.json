@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "manufacturer": "LEGO",
+      "manufacturer_id": "75318",
+      "name": "The Child"
+    },
+    {
+      "id": 2,
+      "manufacturer": "Cobi",
+      "manufacturer_id": "24560",
+      "name": "Panzer IV Ausf. G"
+    },
+    {
+      "id": 3,
+      "manufacturer": "Mould King",
+      "manufacturer_id": "13112",
+      "name": "Super Car"
+    },
+    {
+      "id": 4,
+      "manufacturer": "Qman",
+      "manufacturer_id": "1418",
+      "name": "Fire Rescue Truck"
+    },
+    {
+      "id": 5,
+      "manufacturer": "BlueBrixx",
+      "manufacturer_id": "104010",
+      "name": "Diesellok V200"
+    }
+]
