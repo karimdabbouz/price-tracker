@@ -9,7 +9,7 @@
 
 <div class="flex flex-col min-h-screen mx-20">
 
-    <div class="h-60">
+    <div class="h-40">
         <!-- Spacing -->
     </div>
 
