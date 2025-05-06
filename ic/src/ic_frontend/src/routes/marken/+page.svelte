@@ -32,7 +32,7 @@
 
     <div class="flex-1 my-4">
         <div class="grid grid-cols-5 gap-4">
-            {#each $manufacturers as item}
+            {#each Object.values($manufacturers) as item}
                 <div class="h-64 p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                     <a href="/marken/{item.toLowerCase()}">
                         <img src="/images/logos/{item.toLowerCase()}.webp" alt="{item}" class="w-full h-full object-contain">

@@ -77,7 +77,7 @@
 
     // set manufacturer name from url param
     onMount(() => {
-        manufacturer = $manufacturers.find(m => m.toLowerCase() === $page.params.manufacturer.toLowerCase());
+        manufacturer = Object.values($manufacturers).find(m => m.toLowerCase() === $page.params.manufacturer.toLowerCase());
     });
 
 
