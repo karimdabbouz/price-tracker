@@ -31,7 +31,7 @@
         </div>
         
         <div class="col-start-2 col-span-3">
-            {#each $manufacturers as manufacturer}
+            {#each Object.values($manufacturers) as manufacturer}
                     <div class="h-64 mb-2 flex items-center justify-center p-4" style="background-color: #ffffff; border: 4px solid #E2E8F0;">
                         <a href="/marken/{manufacturer.toLowerCase()}">
                             <img src="/images/logos/{manufacturer.toLowerCase()}.webp" alt="{manufacturer}" class="w-full h-full object-contain">

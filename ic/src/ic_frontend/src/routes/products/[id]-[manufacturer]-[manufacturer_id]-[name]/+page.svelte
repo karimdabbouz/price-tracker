@@ -1,6 +1,7 @@
 <script lang="ts">
     import "../../../index.css";
     import Navbar from "../../../components/Navbar.svelte";
+    import { manufacturers } from "../../../lib/stores";
 
     export let data;
 </script>
@@ -16,7 +17,7 @@
 
     <div class="flex items-center justify-start mb-10">
         <h1 class="text-8xl font-bold" style="color: #0000ff;">
-            {data.product.manufacturer} - {data.product.name}
+            {$manufacturers[data.product.manufacturer] ?? data.product.manufacturer} - {data.product.name}
         </h1>
     </div>
 
