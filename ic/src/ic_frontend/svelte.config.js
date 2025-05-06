@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import fs from 'fs';
-
+import path from 'path';
 
 const slugify = (str) => {
   return str
@@ -10,7 +10,13 @@ const slugify = (str) => {
     .replace(/(^-|-$)+/g, '');
 };
 
-const products = JSON.parse(fs.readFileSync('src/lib/data/products.json', 'utf-8'));
+let products = [];
+try {
+  const productsPath = path.resolve(process.cwd(), 'src/lib/data/products.json');
+  products = JSON.parse(fs.readFileSync(productsPath, 'utf-8'));
+} catch (e) {
+  products = [];
+}
 
 const productEntries = products.map(
   (p) =>
