@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
-from seleniumbase import Driver
+from seleniumbase import Driver # type: ignore
 from shared.db.models import Product
 from shared.schemas import ProductSchema, PriceSchema, RetailerConfig
 from shared.logger import logger
