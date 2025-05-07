@@ -92,15 +92,18 @@ class ProductService:
         ]
     
 
-    def get_products_to_scrape(self, interval: tuple[str, int], retailer_id: int) -> List[ProductSchema]:
+    def get_products_to_scrape(self, scrape_interval: tuple[str, int], retailer_id: int) -> List[ProductSchema]:
         '''
-        Returns a list of products that need to be scraped.
+        Returns a list of products that need to be scraped for this retailer:
+        Filters products by release_year depending on the first value in scrape_interval (current_year, previous_year, older).
+        Excludes products by excluded brands set in retailer.
+        Gets products where there is no price at all for this retailer or the last price was updated more than interval_duration seconds ago.
 
         Args:
-            interval: Tuple of (interval_name, interval_duration)
-            retailer_id: The ID of the retailer to check prices for.
+            scrape_ interval: Tuple of interval_name (current_year, previous_year, older) and interval to check for new prices again (in seconds)
+            retailer_id: The ID of the retailer to check prices for
         '''
-        interval_name, interval_duration = interval
+        interval_name, interval_duration = scrape_interval
         current_year = datetime.datetime.now().year
         
         retailer = self.session.query(Retailer).filter(Retailer.id == retailer_id).first()
@@ -110,7 +113,7 @@ class ProductService:
             year_filter = Product.release_year == current_year
         elif interval_name == 'previous_year':
             year_filter = Product.release_year == current_year - 1
-        else:
+        else: # older
             year_filter = Product.release_year < current_year - 1
         
         products = self.session.query(Product).outerjoin(
