@@ -32,7 +32,7 @@ class BaseScraper(ABC):
                 except Exception as e:
                     raise Exception(f'Error initializing driver: {e}')
         elif self.scraping_mode == 'api':
-            logger.info('Note: Using a proxy will probably interfere with capturing API requests. Use UI or SITEMAP mode instead.')
+            self._log_event('warning', 'Using a proxy will probably interfere with capturing API requests. Use UI or SITEMAP mode instead.')
             if self.selenium_settings['mode'] == 'uc':
                 raise Exception('UC mode is not supported for API scraping. Use UI or SITEMAP mode instead.')
             else:
@@ -146,7 +146,7 @@ class BaseScraper(ABC):
                         if result:
                             results.append(result)
                     except Exception as e:
-                        logger.error(f'Error scraping product {product.manufacturer_id}: {str(e)}')
+                        self._log_event('error', f'Error scraping product {product.manufacturer_id}: {str(e)}')
                         continue
                 return results
             finally:
