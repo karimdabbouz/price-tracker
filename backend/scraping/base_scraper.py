@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from seleniumbase import Driver # type: ignore
 from shared.db.models import Product
 from shared.schemas import ProductSchema, PriceSchema, RetailerConfig
@@ -92,7 +92,7 @@ class BaseScraper(ABC):
 
 
     @abstractmethod
-    def scrape_product_ui(self, driver: Driver, product: ProductSchema) -> List[Dict[str, Any]]:
+    def scrape_product_ui(self, driver: Driver, product: ProductSchema) -> Optional[PriceSchema]:
         '''
         Uses the UI to search for a product. Opens the product page.
         
@@ -142,7 +142,7 @@ class BaseScraper(ABC):
             try:
                 for product in products:
                     try:
-                        result = self.scrape_product_ui(driver, product)
+                        result: Optional[PriceSchema] = self.scrape_product_ui(driver, product)
                         if result:
                             results.append(result)
                     except Exception as e:
