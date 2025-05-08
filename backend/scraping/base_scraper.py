@@ -146,7 +146,7 @@ class BaseScraper(ABC):
                         if result:
                             results.append(result)
                     except Exception as e:
-                        self._log_event('error', f'Error scraping product {product.manufacturer_id}: {str(e)}')
+                        self._log_event('error', f'Error scraping product {product.manufacturer_id}. Now scraping next product: {str(e)}')
                         continue
                 return results
             finally:
