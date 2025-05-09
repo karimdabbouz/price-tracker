@@ -2,16 +2,20 @@
     import { autocompleteProducts } from "$lib/stores";
     import { onMount } from "svelte";
     import type { ProductAutocomplete } from "$lib/types/types";
-    import { API_URL } from "$lib/config";
     import AutoComplete from "simple-svelte-autocomplete";
     // https://github.com/pstanoev/simple-svelte-autocomplete
+    import products from "$lib/data/products.json";
 
-
-    onMount(async () => {
-        const response = await fetch(`${API_URL}/products/autocomplete`);
-        const data: ProductAutocomplete[] = await response.json();
-        autocompleteProducts.set(data);
-    })
+    onMount(() => {
+        console.log("navbar onmount running");
+        const productsAutocomplete: ProductAutocomplete[] = products.map((entry) => ({
+            id: entry.id,
+            manufacturer: entry.manufacturer,
+            manufacturer_id: entry.manufacturer_id,
+            name: entry.name
+        }));
+        autocompleteProducts.set(productsAutocomplete);
+    });
 
     let choice: string;
 </script>

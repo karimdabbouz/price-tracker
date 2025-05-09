@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
 import fs from 'fs';
 import path from 'path';
 
@@ -18,7 +19,7 @@ try {
   products = [];
 }
 
-const productEntries = products.map(
+const productPageURLs = products.map(
   (p) =>
     `/products/${p.id}-${slugify(p.manufacturer)}-${p.manufacturer_id}-${slugify(p.name)}`
 );
@@ -37,7 +38,7 @@ const config = {
       strict: true,
     }),
     prerender: {
-      entries: ['*', ...productEntries],
+      entries: ['*', ...productPageURLs],
       crawl: true,
     }
   },

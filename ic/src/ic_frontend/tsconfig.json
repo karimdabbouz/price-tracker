@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "svelte", "@sveltejs/kit"]
+    "types": ["vite/client", "svelte", "@sveltejs/kit", "node"]
   },
   "include": ["src"]
 }
