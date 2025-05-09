@@ -45,7 +45,8 @@ class PriceService:
 
     def update_price(self, price_schema: PriceSchema) -> Optional[Prices]:
         '''
-        Updates an existing price entry and tracks price history.
+        Updates an existing price if it is different than an existing price.
+        Returns None if no price exists.
         
         Args:
             price_schema: Validated PriceSchema object
