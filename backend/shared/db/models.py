@@ -1,6 +1,6 @@
 import datetime
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, Numeric, JSON, UniqueConstraint, Float, Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, JSON, UniqueConstraint, Float, Boolean # type: ignore
+from sqlalchemy.ext.declarative import declarative_base # type: ignore
 
 Base = declarative_base()
 

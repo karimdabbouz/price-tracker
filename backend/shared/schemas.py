@@ -68,6 +68,14 @@ class PriceSchema(BaseModel):
     last_updated: Optional[datetime.datetime] = None
     price_history: Optional[PriceHistory] = None
 
+    @field_validator('price_history', mode='before')
+    @classmethod
+    def parse_price_history(cls, v):
+        if v:
+            return PriceHistory(history=[(datetime.datetime.fromisoformat(x['datetime']), x['price']) for x in v])
+        else:
+            return PriceHistory(history=[])
+
 
 class RetailerConfig(BaseModel):
     id: Optional[int] = None

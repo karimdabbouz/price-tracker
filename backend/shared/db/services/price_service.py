@@ -1,5 +1,5 @@
 from typing import Optional, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session # type: ignore
 from ..models import Prices
 from shared.schemas import PriceSchema
 import datetime
