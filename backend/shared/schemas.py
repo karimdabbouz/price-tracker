@@ -101,6 +101,7 @@ class RetailerSchema(BaseModel):
         'older': 24 * 3600          # 24 hours
     }
     excluded_brands: List[str] = []  # Default to empty list
+    base_image_url: Optional[str] = None
 
     model_config = ConfigDict(coerce_numbers_to_str=True)
 

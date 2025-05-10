@@ -11,7 +11,7 @@ from shared.db.database import Database
 from shared.logger import logger
 
 
-def add_retailer(session, name, base_url, scraping_method='ui', scrape_intervals=None, affiliate_tag=None, selenium_mode='uc', selenium_headed=True, selenium_proxy=None, excluded_brands=None, take_screenshots=False):
+def add_retailer(session, name, base_url, scraping_method='ui', scrape_intervals=None, affiliate_tag=None, selenium_mode='uc', selenium_headed=True, selenium_proxy=None, excluded_brands=None, take_screenshots=False, base_image_url=None):
     config = RetailerConfig(
         base_url=base_url,
         scraping_method=scraping_method,
@@ -37,7 +37,8 @@ def add_retailer(session, name, base_url, scraping_method='ui', scrape_intervals
         scraping_config=config.model_dump(),
         affiliate_tag=affiliate_tag,
         scrape_intervals=scrape_intervals,
-        excluded_brands=excluded_brands or []
+        excluded_brands=excluded_brands or [],
+        base_image_url=base_image_url
     )
     session.add(retailer)
     session.commit()
@@ -110,6 +111,9 @@ def update_retailer(session, retailer_id, **kwargs):
             intervals['older'] = kwargs['older_interval'] * 3600
         retailer.scrape_intervals = intervals
 
+    if 'base_image_url' in kwargs:
+        retailer.base_image_url = kwargs['base_image_url']
+
     session.commit()
     logger.info(f'Updated retailer: {retailer.name} (ID: {retailer.id})')
 
@@ -130,6 +134,7 @@ def main():
     parser.add_argument('--selenium-proxy', help='Proxy URL for selenium')
     parser.add_argument('--excluded-brands', nargs='+', help='List of brands to exclude from scraping')
     parser.add_argument('--take-screenshots', type=str, choices=['True', 'False'], help='Take screenshots during scraping (True/False)')
+    parser.add_argument('--base-image-url', help='Base image URL for the retailer')
     args = parser.parse_args()
     db = Database()
     
@@ -159,7 +164,8 @@ def main():
                     args.selenium_headed,
                     args.selenium_proxy,
                     args.excluded_brands,
-                    args.take_screenshots.lower() == 'true'
+                    args.take_screenshots.lower() == 'true',
+                    args.base_image_url
                 )
             elif args.action == 'list':
                 list_retailers(session)
@@ -182,6 +188,7 @@ def main():
                 if args.excluded_brands: update_kwargs['excluded_brands'] = args.excluded_brands
                 if args.take_screenshots is not None: 
                     update_kwargs['take_screenshots'] = args.take_screenshots.lower() == 'true'
+                if args.base_image_url: update_kwargs['base_image_url'] = args.base_image_url
                 
                 update_retailer(session, args.id, **update_kwargs)
         except Exception as e:

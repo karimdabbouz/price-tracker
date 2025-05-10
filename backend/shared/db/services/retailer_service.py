@@ -1,5 +1,5 @@
 from typing import Optional, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session # type: ignore
 from ..models import Retailer
 from shared.schemas import RetailerSchema
 
@@ -54,7 +54,8 @@ class RetailerService:
                 'scraping_config': r.scraping_config,
                 'affiliate_tag': r.affiliate_tag,
                 'scrape_intervals': r.scrape_intervals,
-                'excluded_brands': r.excluded_brands
+                'excluded_brands': r.excluded_brands,
+                'base_image_url': r.base_image_url
             })
             for r in retailers
         ]
