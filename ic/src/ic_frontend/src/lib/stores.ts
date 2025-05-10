@@ -3,6 +3,7 @@ import type { ProductAutocomplete } from "./types/types";
 
 
 export const autocompleteProducts = writable<ProductAutocomplete[]>([]);
+export const retailersStore = writable([]);
 
 export const manufacturers = readable({
     "cada": "CaDA",

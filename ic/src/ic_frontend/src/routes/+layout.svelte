@@ -1,12 +1,12 @@
 <script lang="ts">
     import Navbar from "../components/Navbar.svelte";
-    import { autocompleteProducts } from "$lib/stores";
+    import { autocompleteProducts, retailersStore } from "$lib/stores";
     import { onMount } from "svelte";
     import type { ProductAutocomplete } from "$lib/types/types";
     import products from "$lib/data/products.json";
+    import retailers from "$lib/data/retailers.json";
 
     onMount(() => {
-        console.log("hi from root +layout.svelte");
         const productsAutocomplete: ProductAutocomplete[] = products.map((entry) => ({
             id: entry.id,
             manufacturer: entry.manufacturer,
@@ -14,6 +14,7 @@
             name: entry.name
         }));
         autocompleteProducts.set(productsAutocomplete);
+        retailersStore.set(retailers);
     });
 </script>
 

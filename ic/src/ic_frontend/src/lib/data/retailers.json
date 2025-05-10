@@ -2,11 +2,13 @@
     {
         "id": 4,
         "name": "Freakware",
-        "base_url": "https://freakware.de"
+        "base_url": "https://freakware.de",
+        "base_image_url": "https://drp6pdts0tcog.cloudfront.net/misc/freakware.webp"
     },
     {
         "id": 5,
         "name": "Amazon",
-        "base_url": "https://amazon.de"
+        "base_url": "https://amazon.de",
+        "base_image_url": "https://drp6pdts0tcog.cloudfront.net/misc/amazon.webp"
     }
 ]

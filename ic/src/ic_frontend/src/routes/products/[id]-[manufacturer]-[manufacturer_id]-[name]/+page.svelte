@@ -1,6 +1,6 @@
 <script lang="ts">
     import "../../../index.css";
-    import { manufacturers } from "../../../lib/stores";
+    import { manufacturers, retailersStore } from "../../../lib/stores";
     import { onMount } from "svelte";
     import { API_URL } from "../../../lib/config";
 
@@ -9,7 +9,7 @@
     let prices = [];
 
     $: console.log(prices);
-
+    $: console.log($retailersStore);
     onMount(async () => {
         const response = await fetch(`${API_URL}/products/${data.product.id}/prices`);
         prices = (await response.json()).sort((a, b) => a.price - b.price);
@@ -69,8 +69,8 @@
                             ? 'border-2 border-pink-500 bg-pink-50'
                             : 'border border-gray-300 bg-gray-50'}">
                         <div class="flex items-center gap-4">
-                            <img src="" alt={price.retailer_id} class="w-10 h-10 object-contain" />
-                            <span class="font-bold text-lg">{price.retailer_id}</span>
+                            <img src={$retailersStore.find(retailer => retailer.id === price.retailer_id)?.base_image_url} alt={$retailersStore.find(retailer => retailer.id === price.retailer_id)?.name} class="w-10 h-10 object-contain" />
+                            <span class="font-bold text-lg">{$retailersStore.find(retailer => retailer.id === price.retailer_id)?.name}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-2xl font-bold {i === 0 ? 'text-pink-600' : 'text-gray-800'}">
