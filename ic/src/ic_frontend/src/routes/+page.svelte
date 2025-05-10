@@ -1,11 +1,9 @@
 <script lang="ts">
     import "../index.css";
-    import Navbar from "../components/Navbar.svelte";
-    import { manufacturers, newProducts } from "$lib/stores";
+    import { manufacturers, newProducts, } from "$lib/stores";
 </script>
 
 
-<Navbar />
 
 <div class="grid grid-cols-12 grid-rows-[260px_auto_auto] min-h-screen gap-2" style="background-color: #F8FAFC;">
     <div class="col-span-12"></div>

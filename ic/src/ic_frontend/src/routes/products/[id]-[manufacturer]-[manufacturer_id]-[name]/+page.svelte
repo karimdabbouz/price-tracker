@@ -1,6 +1,5 @@
 <script lang="ts">
     import "../../../index.css";
-    import Navbar from "../../../components/Navbar.svelte";
     import { manufacturers } from "../../../lib/stores";
     import { onMount } from "svelte";
     import { API_URL } from "../../../lib/config";
@@ -16,8 +15,6 @@
         prices = (await response.json()).sort((a, b) => a.price - b.price);
     });
 </script>
-
-<Navbar />
 
 
 <div class="flex flex-col min-h-screen mx-20">

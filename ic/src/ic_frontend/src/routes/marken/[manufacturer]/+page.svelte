@@ -1,6 +1,5 @@
 <script lang="ts">
     import "../../../index.css";
-    import Navbar from "../../../components/Navbar.svelte";
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { manufacturers } from "$lib/stores";
@@ -86,8 +85,6 @@
         loadProducts();
     });
 </script>
-
-<Navbar />
 
 
 <div class="flex flex-col min-h-screen mx-20">

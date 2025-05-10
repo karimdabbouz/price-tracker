@@ -1,0 +1,12 @@
+[
+    {
+        "id": 4,
+        "name": "Freakware",
+        "base_url": "https://freakware.de"
+    },
+    {
+        "id": 5,
+        "name": "Amazon",
+        "base_url": "https://amazon.de"
+    }
+]
