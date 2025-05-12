@@ -3,6 +3,7 @@
     import { manufacturers, retailersStore } from "../../../lib/stores";
     import { onMount } from "svelte";
     import { API_URL } from "../../../lib/config";
+    import { Lightbox } from 'svelte-lightbox';
 
     export let data;
 
@@ -34,14 +35,13 @@
     </div>
 
     <div class="flex flex-row my-4 gap-x-10 min-h-[50vh]">
-        <!-- Product Image -->
         <div class="flex-1 p-10 bg-white border-4 border-slate-200 flex items-center justify-center">
-            <img src="https://drp6pdts0tcog.cloudfront.net/COBI-5763-0.webp" alt="product" class="max-w-full max-h-[350px] object-contain" />
+            <Lightbox>
+                <img slot="slide" src="https://drp6pdts0tcog.cloudfront.net/COBI-5763-0.webp" alt="Produktbild 1" />
+            </Lightbox>
         </div>
-        <!-- Product Info & Price Highlight -->
         <div class="flex-1 flex flex-col p-10 bg-white border-4 border-slate-200">
             <div class="flex flex-col h-full justify-between">
-                <!-- Product Title -->
                 <div>
                     <h1 class="text-4xl font-bold text-slate-900 mb-2">
                         {$manufacturers[data.product.manufacturer] ?? data.product.manufacturer} - {data.product.name}
@@ -50,9 +50,7 @@
                         <span>Veröffentlichungsjahr: {data.product.release_year}</span>
                         <span>Teileanzahl: {data.product.piece_count}</span>
                     </div>
-                    <!-- Add more product info here if needed -->
                 </div>
-                <!-- Price Highlight Box -->
                 {#if prices.length > 0}
                     <div class="grid grid-cols-[1fr_auto] items-center gap-6 bg-pink-50 border-2 border-pink-500 rounded-lg p-6 shadow-lg mt-8">
                         <div>
