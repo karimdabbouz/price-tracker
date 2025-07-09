@@ -37,7 +37,7 @@
     <div class="flex flex-row my-4 gap-x-10 min-h-[50vh]">
         <div class="flex-1 p-10 bg-white border-4 border-slate-200 flex items-center justify-center">
             <Lightbox>
-                <img slot="slide" src="https://drp6pdts0tcog.cloudfront.net/COBI-5763-0.webp" alt="Produktbild 1" />
+                <img src="https://drp6pdts0tcog.cloudfront.net/COBI-5763-0.webp" alt="Produktbild 1" />
             </Lightbox>
         </div>
         <div class="flex-1 flex flex-col p-10 bg-white border-4 border-slate-200">

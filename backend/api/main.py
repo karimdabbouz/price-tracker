@@ -30,6 +30,7 @@ app.add_middleware(
 @app.get('/manufacturers', response_model=List[Dict[str, Any]])
 async def get_manufacturers():
     '''
+    NOT CURRENTLY USED.
     Returns a list of manufacturer names and their ID.
     '''
     with db.get_session() as session:
@@ -45,39 +46,10 @@ async def get_manufacturers():
         ]
 
 
-# kann sein, dass wir das nicht mehr brauchen
-@app.get('/manufacturers/{manufacturer}/products', response_model=List[ProductSchema])
-async def get_products(
-    manufacturer: str, 
-    release_year: Optional[int] = None, 
-    limit: Optional[int] = None,
-    sort_by: Optional[str] = None,
-    order: Optional[str] = 'desc'
-):
-    '''
-    Returns a list of products for a given manufacturer with flexible filtering and sorting options.
-    
-    Parameters:
-    - manufacturer: Name of the manufacturer
-    - release_year: Optional year to filter products by
-    - limit: Optional maximum number of products to return
-    - sort_by: Optional field to sort by (e.g., 'release_year', 'name', 'price')
-    - order: Optional sort order ('asc' or 'desc'), defaults to 'desc'
-    '''
-    with db.get_session() as session:
-        product_service = ProductService(session)
-        return product_service.get_by_manufacturer(
-            manufacturer=manufacturer, 
-            release_year=release_year, 
-            limit=limit,
-            sort_by=sort_by,
-            order=order
-        )
-    
-
 @app.get('/products/autocomplete', response_model=List[Dict[str, Any]])
 async def get_product_autocomplete():
     '''
+    NOT CURRENTLY USED. autocompleteProducts store is populated through the products.json.
     Gets ID and name for all products for the autocomplete search.
     '''
     with db.get_session() as session:
@@ -88,6 +60,7 @@ async def get_product_autocomplete():
 @app.get('/products/{id}', response_model=ProductSchema)
 async def get_product(id: int):
     '''
+    USED: Product detail page.
     Returns a product by its ID.
     '''
     with db.get_session() as session:
@@ -98,6 +71,7 @@ async def get_product(id: int):
 @app.get('/products/{product_id}/prices', response_model=List[PriceSchema])
 async def get_product_prices(product_id: int):
     '''
+    USED: Product detail page.
     Returns a list of prices for a given product.
     '''
     with db.get_session() as session:
@@ -113,6 +87,7 @@ async def get_product_listings(
     offset: int = 0
 ):
     '''
+    USED: Manufacturer product listing page.
     Incrementally returns a list of ProductListingSchemas for a given manufacturer.
     Allows specifying a list of release years. Will only return products with at least one price in stock.
     '''
