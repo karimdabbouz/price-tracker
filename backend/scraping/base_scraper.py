@@ -111,7 +111,7 @@ class BaseScraper(ABC):
 
 
     @abstractmethod
-    def scrape_product_sitemap(self):
+    def scrape_product_sitemap(self, driver: Driver, product: ProductSchema) -> Optional[PriceSchema]:
         '''
         Implement later
         '''
