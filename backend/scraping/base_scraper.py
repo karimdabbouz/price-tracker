@@ -129,6 +129,7 @@ class BaseScraper(ABC):
     def run(self, products: List[ProductSchema]) -> List[PriceSchema]:
         '''
         Scrapes prices for a list of products for the retailer defined in retailer_config.
+        Some scraper implementations override this.
 
         Args:
             products: List of ProductSchema instances to scrape
