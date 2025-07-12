@@ -103,7 +103,7 @@ class BaseScraper(ABC):
 
 
     @abstractmethod
-    def scrape_product_api(self):
+    def scrape_product_api(self, driver: Driver, product: ProductSchema) -> Optional[PriceSchema]:
         '''
         Implement later
         '''
