@@ -16,6 +16,9 @@ class BaseScraper(ABC):
     
 
     def _initialize_driver(self) -> Driver:
+        '''
+        Creates a Selenium driver using Selenium Base using the configs in RetailerConfig.
+        '''
         if self.scraping_mode == 'ui':
             if self.selenium_settings['mode'] == 'uc':
                 try:
@@ -129,7 +132,7 @@ class BaseScraper(ABC):
     def run(self, products: List[ProductSchema]) -> List[PriceSchema]:
         '''
         Scrapes prices for a list of products for the retailer defined in retailer_config.
-        Some scraper implementations override this.
+        Some scraper implementations override this method.
 
         Args:
             products: List of ProductSchema instances to scrape
