@@ -8,6 +8,10 @@ import os, datetime
 
 
 class BaseScraper(ABC):
+    '''
+    Abstract class for a product data scraper.
+    TODO: scraping_mode is redundant, also contained in RetailerConfig
+    '''
     def __init__(self, retailer_config: RetailerConfig):
         self.take_screenshots = retailer_config.take_screenshots
         self.retailer_config = retailer_config
