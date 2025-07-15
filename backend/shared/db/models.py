@@ -1,6 +1,8 @@
 import datetime
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, JSON, UniqueConstraint, Float, Boolean # type: ignore
 from sqlalchemy.ext.declarative import declarative_base # type: ignore
+from sqlalchemy.dialects.postgresql import ARRAY
+from pgvector.sqlalchemy import Vector  # Add this import
 
 Base = declarative_base()
 
@@ -47,3 +49,18 @@ class Retailer(Base):
     scrape_intervals = Column(JSON)
     excluded_brands = Column(JSON)  # List of brand names to exclude
     base_image_url = Column(String)
+
+class ProductContent(Base):
+    __tablename__ = 'product_content'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    product_id = Column(Integer, ForeignKey('products.id'), nullable=False, index=True)
+    content_type = Column(String, nullable=False)  # e.g., 'ai_description', 'pros_cons', 'faq'
+    content = Column(JSON, nullable=False)         # Structured content (dict or list)
+    embedding = Column(Vector(384), nullable=True) # Vector embedding (384 dims as a placeholder for now)
+    created_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC))
+    updated_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
+
+    __table_args__ = (
+        UniqueConstraint('product_id', 'content_type', 'content', name='uix_product_content_unique'),
+    )
