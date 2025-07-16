@@ -60,7 +60,3 @@ class ProductContent(Base):
     embedding = Column(Vector(384), nullable=True) # Vector embedding (384 dims as a placeholder for now)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC))
     updated_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
-
-    __table_args__ = (
-        UniqueConstraint('product_id', 'content_type', 'content', name='uix_product_content_unique'),
-    )
