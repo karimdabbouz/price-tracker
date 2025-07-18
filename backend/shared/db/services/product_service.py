@@ -131,3 +131,24 @@ class ProductService:
         ).all()
         
         return [ProductSchema.model_validate(product.__dict__) for product in products]
+
+
+    def edit_product(self, product_id: int, updates: Dict[str, Any]) -> Optional[ProductSchema]:
+        '''
+        Updates a product entry in the products table. When changing a value, the created_at value is updated to now.
+        
+        Returns the updated ProductSchema or none if nothing has changed.
+        
+        Args:
+            product_id: The ID of the product to update
+            updates: A dict of fields to update (e.g., {'name': 'New Name'})
+        '''
+        product = self.session.query(Product).filter(Product.id == product_id).first()
+        if not product:
+            return None
+        for key, value in updates.items():
+            if hasattr(product, key):
+                setattr(product, key, value)
+        product.created_at = datetime.datetime.now(datetime.UTC)
+        self.session.commit()
+        return ProductSchema.model_validate(product.__dict__)
