@@ -30,8 +30,10 @@ class ProductService:
         offset: Optional[int] = 0
     ) -> Tuple[List[ProductListingSchema], int]:
         '''
-        Gets products for which at least one price exist by manufacturer
+        Gets products for which at least one price exists by manufacturer
         using limit and offset for one or more specified release years.
+
+        Used in /manufacturers/{manufacturer}/product_listings API endpoint for the /marken/[manufacturer] route.
         
         Args:
             manufacturer: The manufacturer
