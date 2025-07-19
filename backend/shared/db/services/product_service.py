@@ -4,7 +4,9 @@ from sqlalchemy import or_, func, desc # type: ignore
 from sqlalchemy.orm import Session # type: ignore
 from ..models import Product, Prices, Retailer
 from shared.schemas import ProductSchema, ProductListingSchema, PriceSchema
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ProductService:
     '''
@@ -143,11 +145,14 @@ class ProductService:
             product_id: The ID of the product to update
             updates: A dict of fields to update (e.g., {'name': 'New Name'})
         '''
+        logger.info(f'Called update_entry for product_id={product_id} with updates={updates}')
         product = self.session.query(Product).filter(Product.id == product_id).first()
         if not product:
+            logger.warning(f'No product found with id={product_id}')
             return None
         for key, value in updates.items():
             if hasattr(product, key):
+                logger.info(f'Updating {key} from {getattr(product, key)} to {value}')
                 setattr(product, key, value)
         product.created_at = datetime.datetime.now(datetime.UTC)
         self.session.commit()
