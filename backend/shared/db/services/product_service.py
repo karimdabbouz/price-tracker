@@ -133,7 +133,7 @@ class ProductService:
         return [ProductSchema.model_validate(product.__dict__) for product in products]
 
 
-    def edit_product(self, product_id: int, updates: Dict[str, Any]) -> Optional[ProductSchema]:
+    def update_entry(self, product_id: int, updates: Dict[str, Any]) -> Optional[ProductSchema]:
         '''
         Updates a product entry in the products table. When changing a value, the created_at value is updated to now.
         
