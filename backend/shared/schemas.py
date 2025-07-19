@@ -14,6 +14,10 @@ class ProductSchema(BaseModel):
     piece_count: Optional[int] = None
     minifigures: Optional[int] = None
     release_year: Optional[int] = None
+    ean: Optional[str] = None
+    minifigs: Optional[int] = None
+    age_recommendation: Optional[str] = None
+    rrp: Optional[float] = None
     created_at: Optional[datetime.datetime] = None
 
     @classmethod
@@ -29,7 +33,11 @@ class ProductSchema(BaseModel):
             piece_count=data[7],
             minifigures=None,
             release_year=data[8],
-            created_at=datetime.datetime.now(datetime.UTC)
+            created_at=datetime.datetime.now(datetime.UTC),
+            ean=None,
+            minifigs=None,
+            age_recommendation=None,
+            rrp=None
         )
 
     @field_validator('piece_count', mode='before')

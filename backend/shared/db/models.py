@@ -19,6 +19,10 @@ class Product(Base):
     piece_count = Column(Integer)
     minifigures = Column(Integer)
     release_year = Column(Integer)
+    ean = Column(String)
+    minifigs = Column(Integer)
+    age_recommendation = Column(String)
+    rrp = Column(Float)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC))
 
 class Prices(Base):
